@@ -1,0 +1,397 @@
+/* ==================== ROOT & TYPOGRAPHY ==================== */
+:root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #e2e8f0;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* ==================== LAYOUT ==================== */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 24px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
+}
+
+/* ==================== NAVIGATION ==================== */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(31, 41, 55, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav a {
+  color: #e2e8f0;
+  margin-right: 16px;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  background: rgba(37, 99, 235, 0.1);
+  color: #60a5fa;
+}
+
+.nav .logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ==================== CARDS ==================== */
+.card {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  border: 1px solid rgba(41, 53, 72, 0.6);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* ==================== GRID LAYOUTS ==================== */
+.grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .grid,
+  .grid.two {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==================== FORM ELEMENTS ==================== */
+form input,
+form select,
+form textarea,
+form button,
+.link-btn {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: rgba(11, 18, 32, 0.8);
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #3b82f6;
+  background: rgba(11, 18, 32, 1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+form input::placeholder,
+form textarea::placeholder {
+  color: #64748b;
+}
+
+form button {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+form button:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+form button:active {
+  transform: translateY(0);
+}
+
+form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==================== LINKS & BUTTONS ==================== */
+.link-btn {
+  background: transparent;
+  border: 1px solid #334155;
+  cursor: pointer;
+  width: auto;
+  display: inline-block;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.link-btn:hover {
+  background: rgba(51, 65, 85, 0.2);
+  border-color: #475569;
+}
+
+/* ==================== LISTS ==================== */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(41, 53, 72, 0.5);
+  transition: all 0.2s ease;
+}
+
+.list-row:last-child {
+  border-bottom: none;
+}
+
+.list-row:hover {
+  background: rgba(51, 65, 85, 0.1);
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 8px;
+}
+
+/* ==================== SWITCHER / TABS ==================== */
+.switcher {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  background: rgba(11, 18, 32, 0.5);
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.switcher button {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.switcher button:hover {
+  color: #e2e8f0;
+  background: rgba(51, 65, 85, 0.3);
+}
+
+.switcher .active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+.error {
+  color: #f87171;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.muted {
+  color: #94a3b8;
+  font-size: 0.9em;
+}
+
+.hint {
+  color: #94a3b8;
+  font-size: 0.85em;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* ==================== TABLES ==================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(11, 18, 32, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+thead {
+  background: rgba(37, 99, 235, 0.1);
+}
+
+td,
+th {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(41, 53, 72, 0.5);
+  text-align: left;
+}
+
+th {
+  font-weight: 600;
+  color: #60a5fa;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background: rgba(51, 65, 85, 0.2);
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card,
+.list-row {
+  animation: fadeIn 0.3s ease;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .nav {
+    padding: 12px 16px;
+  }
+
+  .content {
+    padding: 16px 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  form input,
+  form select,
+  form button {
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav .logo {
+    font-size: 1.1rem;
+  }
+
+  .switcher {
+    flex-direction: column;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  td,
+  th {
+    padding: 8px 10px;
+  }
+}

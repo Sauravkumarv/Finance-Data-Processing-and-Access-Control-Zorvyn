@@ -1,0 +1,1 @@
+// keep components index minimal for potential future re-exports
