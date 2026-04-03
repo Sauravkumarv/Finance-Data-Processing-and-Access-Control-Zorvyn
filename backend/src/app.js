@@ -11,7 +11,7 @@ const app = express();
 
 app.use(cors({
 origin:"http://localhost:5173",
-methods:["get","post","put","patch"]
+methods:["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 },
 ));
 app.use(express.json());
