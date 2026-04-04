@@ -46,28 +46,42 @@ function KpiCard({ label, value, sub, tone, icon }) {
   );
 }
 
-function FilterPanel({ filters, setFilters, onApply, onClear, loading }) {
+function FilterPanel({ filters, setFilters, onApply, onClear, loading, categoryOptions }) {
+  const hasActiveFilters = Boolean(filters.type || filters.category || filters.startDate || filters.endDate);
+
   return (
     <section className="dashboard-card dashboard-filters">
       <SectionLabel>filters</SectionLabel>
 
       <div className="dashboard-filters__grid">
-        <select
-          className="dashboard-field dashboard-field--select"
-          value={filters.type}
-          onChange={(event) => setFilters((current) => ({ ...current, type: event.target.value }))}
-        >
-          <option value="">All types</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
+        <label className="dashboard-field-group">
+          <span className="dashboard-field-group__label">type</span>
+          <select
+            className="dashboard-field dashboard-field--select"
+            value={filters.type}
+            onChange={(event) => setFilters((current) => ({ ...current, type: event.target.value }))}
+          >
+            <option value="">All types</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </label>
 
-        <input
-          className="dashboard-field"
-          placeholder="Category"
-          value={filters.category}
-          onChange={(event) => setFilters((current) => ({ ...current, category: event.target.value }))}
-        />
+        <label className="dashboard-field-group">
+          <span className="dashboard-field-group__label">category</span>
+          <select
+            className="dashboard-field dashboard-field--select"
+            value={filters.category}
+            onChange={(event) => setFilters((current) => ({ ...current, category: event.target.value }))}
+          >
+            <option value="">All categories</option>
+            {categoryOptions.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <label className="dashboard-field-group">
           <span className="dashboard-field-group__label">from</span>
@@ -97,7 +111,7 @@ function FilterPanel({ filters, setFilters, onApply, onClear, loading }) {
           {loading && <Spinner />}
           <span>apply filters</span>
         </button>
-        <button className="dashboard-button dashboard-button--ghost" onClick={onClear} disabled={loading}>
+        <button className="dashboard-button dashboard-button--ghost" onClick={onClear} disabled={loading || !hasActiveFilters}>
           clear
         </button>
       </div>
@@ -203,7 +217,7 @@ function TrendChart({ trends }) {
   return (
     <section className="dashboard-card dashboard-chart">
       <div className="dashboard-chart__header">
-        <span className="dashboard-panel-title">12-month cashflow</span>
+        <span className="dashboard-panel-title">12-Month Cashflow</span>
         <div className="dashboard-chart__legend">
           {[
             { color: 'var(--accent)', label: 'income' },
@@ -240,7 +254,7 @@ function ActivityCard({ records = [], meta = {} }) {
   return (
     <section className="dashboard-card dashboard-panel">
       <p className="dashboard-panel-title">
-        recent activity
+        Recent Activity
         {meta.total > 0 && <span className="dashboard-panel-title__meta">{meta.total} records</span>}
       </p>
 
@@ -293,7 +307,7 @@ function CategoryCard({ categories = [] }) {
 
   return (
     <section className="dashboard-card dashboard-panel">
-      <p className="dashboard-panel-title">top categories</p>
+      <p className="dashboard-panel-title">Top Categories</p>
 
       {categories.length === 0 ? (
         <p className="dashboard-empty-state">no data</p>
@@ -344,7 +358,7 @@ function MonthlyList({ trends = [] }) {
 
   return (
     <section className="dashboard-card dashboard-panel">
-      <p className="dashboard-panel-title">monthly breakdown</p>
+      <p className="dashboard-panel-title">Monthly Breakdown</p>
 
       {sorted.length === 0 ? (
         <p className="dashboard-empty-state">no data</p>
@@ -410,6 +424,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [filters, setFilters] = useState(EMPTY_FILTERS);
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
   const load = useCallback(
     async (params) => {
@@ -433,9 +448,26 @@ export default function DashboardPage() {
     [token]
   );
 
+  const loadCategoryOptions = useCallback(async () => {
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await api.records.list(token);
+      const nextOptions = Array.from(
+        new Set((response.records || []).map((record) => record.category).filter(Boolean))
+      ).sort((left, right) => left.localeCompare(right));
+      setCategoryOptions(nextOptions);
+    } catch {
+      setCategoryOptions([]);
+    }
+  }, [token]);
+
   useEffect(() => {
     load(EMPTY_FILTERS);
-  }, [load]);
+    loadCategoryOptions();
+  }, [load, loadCategoryOptions]);
 
   const applyFilters = () => load(filters);
 
@@ -445,6 +477,9 @@ export default function DashboardPage() {
   };
 
   const expenseRatio = data?.totalIncome ? Math.round((data.totalExpense / data.totalIncome) * 100) : 0;
+  const visibleCategoryOptions = Array.from(new Set([...categoryOptions, filters.category].filter(Boolean))).sort(
+    (left, right) => left.localeCompare(right)
+  );
 
   return (
     <div className="dashboard-page">
@@ -459,6 +494,7 @@ export default function DashboardPage() {
           onApply={applyFilters}
           onClear={clearFilters}
           loading={loading}
+          categoryOptions={visibleCategoryOptions}
         />
 
         <SectionLabel>overview</SectionLabel>
@@ -507,3 +543,7 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+
+
+
