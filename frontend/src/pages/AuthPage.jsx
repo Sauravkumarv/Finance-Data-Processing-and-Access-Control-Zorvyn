@@ -109,7 +109,7 @@ export default function AuthPage() {
         </button>
       </form>
 
-      <p className="hint">First user auto-promoted to admin.</p>
+      <p className="hint">Use(admin@gmail.com & 123456) as dummy account.</p>
     </div>
   );
 }
