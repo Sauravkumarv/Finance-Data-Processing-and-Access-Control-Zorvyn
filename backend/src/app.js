@@ -10,7 +10,8 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 app.use(cors({
-origin:"http://localhost:5173",
+// origin:"http://localhost:5173",
+origin:"finance-data-processing-and-access-three.vercel.app",
 methods:["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 },
 ));
