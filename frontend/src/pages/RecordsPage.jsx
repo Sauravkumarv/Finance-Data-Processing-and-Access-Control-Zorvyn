@@ -1,28 +1,38 @@
+import AppNav from '../components/AppNav';
 import { useEffect, useState } from 'react';
 import { api } from '../utils/api';
 import { useAuth } from '../state/AuthContext';
+import './RecordsPage.css';
+
+const INITIAL_FORM = { amount: '', type: 'income', category: '', notes: '' };
+const FILTERS = { type: '', category: '', startDate: '', endDate: '' };
 
 export default function RecordsPage() {
   const { token } = useAuth();
   const [records, setRecords] = useState([]);
-  const [form, setForm] = useState({ amount: '', type: 'income', category: '', notes: '' });
+  const [form, setForm] = useState(INITIAL_FORM);
   const [error, setError] = useState('');
 
-  const load = () => api.records.list(token).then((d) => setRecords(d.records)).catch((e) => setError(e.message));
+  const load = (params = FILTERS) =>
+    api.records
+      .list(token, params)
+      .then((data) => setRecords(data.records))
+      .catch((requestError) => setError(requestError.message));
 
   useEffect(() => {
     load();
   }, [token]);
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const submit = async (event) => {
+    event.preventDefault();
     setError('');
+
     try {
       await api.records.create({ ...form, amount: Number(form.amount) }, token);
-      setForm({ amount: '', type: 'income', category: '', notes: '' });
+      setForm(INITIAL_FORM);
       load();
-    } catch (err) {
-      setError(err.message);
+    } catch (requestError) {
+      setError(requestError.message);
     }
   };
 
@@ -32,51 +42,80 @@ export default function RecordsPage() {
   };
 
   return (
-    <div className="grid two">
-      <div className="card">
-        <h3>Add Record</h3>
-        <form onSubmit={submit} className="stack">
-          <input
-            type="number"
-            placeholder="Amount"
-            value={form.amount}
-            onChange={(e) => setForm({ ...form, amount: e.target.value })}
-            required
-          />
-          <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-          </select>
-          <input
-            placeholder="Category"
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-            required
-          />
-          <input
-            placeholder="Notes (optional)"
-            value={form.notes}
-            onChange={(e) => setForm({ ...form, notes: e.target.value })}
-          />
-          {error && <p className="error">{error}</p>}
-          <button type="submit">Save</button>
-        </form>
-      </div>
+    <div className="records-page">
+      <AppNav statusLabel="live · records" />
 
-      <div className="card">
-        <h3>Your Records</h3>
-        <ul className="list">
-          {records.map((r) => (
-            <li key={r._id} className="list-row">
-              <div>
-                <strong>{r.type}</strong> ${r.amount} • {r.category}
-                <div className="muted">{new Date(r.date).toLocaleDateString()} • {r.notes}</div>
-              </div>
-              <button className="link-btn" onClick={() => remove(r._id)}>Delete</button>
-            </li>
-          ))}
-          {records.length === 0 && <p className="muted">No records yet.</p>}
-        </ul>
+      <div className="records-page__shell">
+        <div className="records-page__grid">
+          <section className="records-card">
+            <h3 className="records-card__title">Add Record</h3>
+
+            <form className="records-form" onSubmit={submit}>
+              <input
+                className="records-form__field"
+                placeholder="Amount"
+                type="number"
+                value={form.amount}
+                onChange={(event) => setForm({ ...form, amount: event.target.value })}
+              />
+
+              <select
+                className="records-form__field"
+                value={form.type}
+                onChange={(event) => setForm({ ...form, type: event.target.value })}
+              >
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+
+              <input
+                className="records-form__field"
+                placeholder="Category"
+                value={form.category}
+                onChange={(event) => setForm({ ...form, category: event.target.value })}
+              />
+
+              <input
+                className="records-form__field"
+                placeholder="Notes"
+                value={form.notes}
+                onChange={(event) => setForm({ ...form, notes: event.target.value })}
+              />
+
+              {error && <p className="error">{error}</p>}
+
+              <button className="records-button records-button--primary" type="submit">
+                Save
+              </button>
+            </form>
+          </section>
+
+          <section className="records-card">
+            <h3 className="records-card__title">Your Records</h3>
+
+            <ul className="records-list">
+              {records.map((record) => (
+                <li key={record._id} className="records-list__item">
+                  <div className="records-list__content">
+                    <strong className={`records-list__type ${record.type === 'income' ? 'is-income' : 'is-expense'}`}>
+                      {record.type.toUpperCase()}
+                    </strong>{' '}
+                    ${record.amount}
+                    <div className="records-list__meta">
+                      {record.category} • {new Date(record.date).toLocaleDateString()}
+                    </div>
+                  </div>
+
+                  <button className="records-button records-button--danger" onClick={() => remove(record._id)} type="button">
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {records.length === 0 && <p className="records-empty">No records yet.</p>}
+          </section>
+        </div>
       </div>
     </div>
   );

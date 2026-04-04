@@ -1,6 +1,11 @@
 const API_BASE = import.meta.env.VITE_API_URL || '';
-
 const authHeader = (token) => token ? { Authorization: `Bearer ${token}` } : {};
+
+const buildQuery = (params = {}) => {
+  const entries = Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '');
+  if (!entries.length) return '';
+  return '?' + new URLSearchParams(entries).toString();
+};
 
 async function request(path, { method = 'GET', body, token } = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -23,9 +28,9 @@ async function request(path, { method = 'GET', body, token } = {}) {
 export const api = {
   register: (payload, token) => request('/api/auth/register', { method: 'POST', body: payload, token }),
   login: (payload) => request('/api/auth/login', { method: 'POST', body: payload }),
-  summary: (token) => request('/api/dashboard/summary', { token }),
+  summary: (token, params) => request('/api/dashboard/summary' + buildQuery(params), { token }),
   records: {
-    list: (token) => request('/api/records', { token }),
+    list: (token, params) => request('/api/records' + buildQuery(params), { token }),
     create: (payload, token) => request('/api/records', { method: 'POST', body: payload, token }),
     remove: (id, token) => request(`/api/records/${id}`, { method: 'DELETE', token }),
   },

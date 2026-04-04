@@ -1,0 +1,130 @@
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-nav);
+  backdrop-filter: blur(14px);
+}
+
+.app-nav__brand {
+  color: var(--accent);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+}
+
+.app-nav__brand-secondary {
+  color: var(--text-primary);
+}
+
+.app-nav__links,
+.app-nav__meta,
+.app-nav__status {
+  display: flex;
+  align-items: center;
+}
+
+.app-nav__links {
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.app-nav__link,
+.app-nav__logout {
+  padding: 7px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: color var(--ease), background var(--ease), border-color var(--ease);
+}
+
+.app-nav__link:hover,
+.app-nav__logout:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.app-nav__link.is-active {
+  border-color: rgba(79, 124, 255, 0.3);
+  background: rgba(79, 124, 255, 0.08);
+  color: var(--accent2);
+}
+
+.app-nav__meta {
+  gap: 12px;
+}
+
+.app-nav__status {
+  gap: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.app-nav__live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+.app-nav__spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--accent2);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.app-nav__logout {
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .app-nav {
+    flex-wrap: wrap;
+  }
+
+  .app-nav__links {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .app-nav__meta {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-nav {
+    padding: 14px 16px;
+  }
+
+  .app-nav__meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .app-nav__status {
+    font-size: 0.68rem;
+  }
+}

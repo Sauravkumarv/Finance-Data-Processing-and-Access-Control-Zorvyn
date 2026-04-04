@@ -12,6 +12,7 @@ exports.create = asyncHandler(async (req, res) => {
 
   const payload = { ...req.body, owner: req.user.id };
   const record = await Record.create(payload);
+  await record.populate('owner', 'name role');
   return res.status(201).json({ message: 'Record created', record });
 });
 
@@ -29,7 +30,7 @@ exports.list = asyncHandler(async (req, res) => {
   }
 
   // Non-admins only see their own records
-  if (req.user.role !== ROLES.ADMIN) {
+  if (req.user.role !== ROLES.owner) {
     filter.owner = req.user.id;
   }
 
@@ -39,7 +40,8 @@ exports.list = asyncHandler(async (req, res) => {
     Record.find(filter)
       .sort({ date: -1 })
       .skip(skip)
-      .limit(Number(limit)),
+      .limit(Number(limit))
+      .populate('owner', 'name role'),
     Record.countDocuments(filter),
   ]);
 
