@@ -11,7 +11,8 @@ const app = express();
 
 app.use(cors({
 // origin:"http://localhost:5173",
-origin:"finance-data-processing-and-access-three.vercel.app",
+origin:"https://finance-data-processing-and-access-w5lr.onrender.com",
+  
 methods:["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 },
 ));
