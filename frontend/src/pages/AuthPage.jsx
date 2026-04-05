@@ -9,7 +9,7 @@ export default function AuthPage() {
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
-  const[loading,setLoading]=useState()
+  const[loading,setLoading]=useState(false)
   const navigate = useNavigate();
 
   // 🔥 VALIDATION FUNCTION
@@ -45,34 +45,37 @@ export default function AuthPage() {
   };
 
   const submit = async (e) => {
-    e.preventDefault();
-    setError('');
+  e.preventDefault();
+  setError('');
 
-    // 🔥 VALIDATION CHECK
-    const validationError = validateForm();
-    if (validationError) {
-      setError(validationError);
-      return;
+  const validationError = validateForm();
+  if (validationError) {
+    setError(validationError);
+    return;
+  }
+
+  try {
+    setLoading(true); // 🔥 START LOADING
+
+    if (mode === 'register') {
+      await api.register(form);
+      setMode('login');
     }
 
-    try {
-      if (mode === 'register') {
-        await api.register(form);
-        setMode('login');
-      }
+    const res = await api.login({
+      email: form.email,
+      password: form.password
+    });
 
-      const res = await api.login({
-        email: form.email,
-        password: form.password
-      });
+    setToken(res.token);
+    navigate("/dashboard");
 
-      setToken(res.token);
-      navigate("/dashboard");
-
-    } catch (err) {
-      setError(err.message || "Something went wrong");
-    }
-  };
+  } catch (err) {
+    setError(err.message || "Something went wrong");
+  } finally {
+    setLoading(false); // 🔥 STOP LOADING
+  }
+};
 
   return (
     <div className="card auth-card">
