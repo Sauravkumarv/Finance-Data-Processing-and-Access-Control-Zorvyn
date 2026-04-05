@@ -112,6 +112,9 @@
   box-shadow: var(--shadow-glow);
   background: rgba(13, 19, 34, 1);
 }
+.dashboard-field--date {
+  color-scheme: dark;
+}
 
 .dashboard-field--select {
   padding-right: 34px;
