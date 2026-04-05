@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { api } from '../utils/api';
 import { useAuth } from '../state/AuthContext';
 import { useNavigate } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function AuthPage() {
   const { setToken } = useAuth();
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
+  const[loading,setLoading]=useState()
   const navigate = useNavigate();
 
   // 🔥 VALIDATION FUNCTION
@@ -104,9 +106,13 @@ export default function AuthPage() {
 
         {error && <p className="error">{error}</p>}
 
-        <button type="submit">
-          {mode === 'login' ? 'Login' : 'Register + Login'}
-        </button>
+        <button type="submit" disabled={loading}>
+        {loading ? (
+      <ClipLoader size={20} color="#fff" />
+        ) : (
+    mode === 'login' ? 'Login' : 'Register + Login'
+     )}
+</button>
       </form>
 
       <p className="hint">First user auto-promoted to admin.</p>
